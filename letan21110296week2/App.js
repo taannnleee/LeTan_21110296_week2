@@ -9,41 +9,45 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
 const App = () => {
-  const [data, setData] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
 
   const handleSave = async () => {
-    if (data) {
+    if (email && password) {
       try {
-        await addDoc(collection(db, 'yourCollectionName'), { data });
-        Alert.alert('Success', 'Data saved successfully!');
-        setData('');
+        // Ensure collection name and document structure meet your requirements
+        await addDoc(collection(db, 'todo'), { email, password });
+        Alert.alert('Success', 'Đăng ký thành công!');
+        setEmail('');
+        setPassword('');
       } catch (error) {
         console.error('Error saving data:', error);
         Alert.alert('Error', 'Error saving data. Check console for details.');
       }
     } else {
-      Alert.alert('Warning', 'Please enter some data.');
+      Alert.alert('Warning', 'Please enter both email and password.');
     }
   };
 
   return (
     <View style={styles.container}>
-      <View style={styles.message}>
-        <Text style={styles.title}>Welcome</Text>
-        <Text style={styles.subtitle}>Firebase Hosting Setup Complete</Text>
-        <Text style={styles.paragraph}>
-          You're seeing this because you've successfully setup Firebase Hosting. Now it's time to go build something extraordinary!
-        </Text>
-      </View>
       <View style={styles.formContainer}>
-        <Text style={styles.formTitle}>Save Data to Firestore</Text>
+        <Text style={styles.formTitle}>Register</Text>
         <TextInput
           style={styles.input}
-          value={data}
-          onChangeText={setData}
-          placeholder="Enter some data"
+          value={email}
+          onChangeText={setEmail}
+          placeholder="Email"
+          keyboardType="email-address"
         />
-        <Button title="Save Data" onPress={handleSave} />
+        <TextInput
+          style={styles.input}
+          value={password}
+          onChangeText={setPassword}
+          placeholder="Password"
+          secureTextEntry
+        />
+        <Button title="Register" onPress={handleSave} />
       </View>
     </View>
   );
@@ -57,37 +61,16 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 16,
   },
-  message: {
-    backgroundColor: 'white',
-    maxWidth: 360,
-    padding: 32,
-    borderRadius: 3,
-    marginBottom: 16,
-    alignItems: 'center',
-  },
-  title: {
-    color: '#ffa100',
-    fontWeight: 'bold',
-    fontSize: 16,
-  },
-  subtitle: {
-    fontSize: 22,
-    fontWeight: '300',
-    color: 'rgba(0,0,0,0.6)',
-    marginVertical: 16,
-  },
-  paragraph: {
-    lineHeight: 1.4,
-    marginVertical: 24,
-    fontSize: 14,
-    textAlign: 'center',
-  },
   formContainer: {
     backgroundColor: 'white',
     maxWidth: 360,
     padding: 32,
     borderRadius: 3,
-    boxShadow: '0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24)',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 3,
+    elevation: 3,
     alignItems: 'center',
   },
   formTitle: {
