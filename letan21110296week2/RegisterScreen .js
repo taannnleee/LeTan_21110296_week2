@@ -17,8 +17,8 @@ const RegisterScreen = () => {
     }
 
     const registerRequest = {
-      name: name,
-      phoneNumber: phoneNumber,
+      fullname: name,
+      phone: phoneNumber,
       email: email,
       password: password,
     };
@@ -33,9 +33,9 @@ const RegisterScreen = () => {
       });
 
       const responseData = await response.json();
-      if (responseData.status === 200) {
-        navigation.navigate('LoginScreen');
+      if (responseData.status == 200) {
         Alert.alert('Success', responseData.message || 'Registration successful');
+        navigation.navigate('Login');
       } else {
         Alert.alert('Error', responseData.message || 'An error occurred.');
       }
