@@ -22,19 +22,15 @@ const ForgotPassword = () => {
       });
 
       const responseData = await response.json();
-    //   console.log('Response:', response);
-    //   console.log('Response Data:', responseData);
+      console.log('Response:', response);
+      console.log('Response Data:', responseData);
 
-    //   if (response.ok) {
-    //     if (responseData.status === 201) { // Check if the status code matches success
-    //       Alert.alert('Success', responseData.message || 'OTP sent successfully');
-    //       navigation.navigate('NextScreen'); // Navigate to the next screen or form
-    //     } else {
-    //       Alert.alert('Error', responseData.message || 'An error occurred.');
-    //     }
-    //   } else {
-    //     Alert.alert('Error', 'Server responded with an error.');
-    //   }
+      if (responseData.status == 200) {
+        Alert.alert('Success', responseData.message );
+        navigation.navigate('Login');
+      } else {
+        Alert.alert('Error', responseData.message );
+      }
 
     } catch (error) {
       Alert.alert('Error', 'An error occurred while sending OTP. Please try again later.');
