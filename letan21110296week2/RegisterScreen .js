@@ -1,40 +1,47 @@
 import React, { useState } from 'react';
 import { View, TouchableOpacity, Text, TextInput, StyleSheet, Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import AboutMeScreen from './AboutMeScreen';
 
-const LoginScreen = () => {
+const RegisterScreen = () => {
+  const [name, setName] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const navigation = useNavigation(); // Hook điều hướng
 
-  const handleLogin = async () => {
-    const loginRequest = {
+  const handleRegister = async () => {
+    if (password !== confirmPassword) {
+      Alert.alert('Error', 'Passwords do not match.');
+      return;
+    }
+
+    const registerRequest = {
+      name: name,
       phoneNumber: phoneNumber,
+      email: email,
       password: password,
     };
 
     try {
-      const response = await fetch('http://192.168.245.139:8080/api/login', { 
+      const response = await fetch('http://192.168.245.139:8080/api/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(loginRequest),
+        body: JSON.stringify(registerRequest),
       });
 
       const responseData = await response.json();
-      if (responseData.status == 200) {
-        navigation.navigate('AboutMeScreen');
-        Alert.alert('Success', responseData.message || 'Login successful');
-     
+      if (responseData.status === 200) {
+        navigation.navigate('LoginScreen');
+        Alert.alert('Success', responseData.message || 'Registration successful');
       } else {
-        // Hiển thị thông báo lỗi dựa trên mã trạng thái
-        Alert.alert('Error',  'An error occurred.'); 
+        Alert.alert('Error', responseData.message || 'An error occurred.');
       }
       
     } catch (error) {
-      Alert.alert('Error', 'An error occurred while logging in. Please try again later.');
+      Alert.alert('Error', 'An error occurred while registering. Please try again later.');
       console.error('Error:', error);
     }
   };
@@ -42,7 +49,14 @@ const LoginScreen = () => {
   return (
     <View style={styles.container}>
       <View style={styles.formContainer}>
-        <Text style={styles.title}>Sign In</Text>
+        <Text style={styles.title}>Register</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="Name"
+          placeholderTextColor="#aaa"
+          value={name}
+          onChangeText={setName}
+        />
         <TextInput
           style={styles.input}
           placeholder="Phone Number"
@@ -52,33 +66,40 @@ const LoginScreen = () => {
         />
         <TextInput
           style={styles.input}
+          placeholder="Email"
+          placeholderTextColor="#aaa"
+          value={email}
+          onChangeText={setEmail}
+        />
+        <TextInput
+          style={styles.input}
           placeholder="Password"
           secureTextEntry
           placeholderTextColor="#aaa"
           value={password}
           onChangeText={setPassword}
         />
+        <TextInput
+          style={styles.input}
+          placeholder="Confirm Password"
+          secureTextEntry
+          placeholderTextColor="#aaa"
+          value={confirmPassword}
+          onChangeText={setConfirmPassword}
+        />
 
         <View style={styles.buttonContainer}>
-          <TouchableOpacity style={styles.btn} onPress={handleLogin}>
-            <Text style={styles.btnText}>Login</Text>
-          </TouchableOpacity>
-        </View>
-
-        <View style={styles.buttonContainer}>
-          <TouchableOpacity style={styles.btn}>
-            <Text style={styles.btnText}>Forget Password</Text>
-          </TouchableOpacity>
-        </View>
-
-        <View style={styles.buttonContainer}>
-          <TouchableOpacity style={styles.btn} onPress={() => navigation.navigate('RegisterScreen')}>
+          <TouchableOpacity style={styles.btn} onPress={handleRegister}>
             <Text style={styles.btnText}>Register</Text>
           </TouchableOpacity>
         </View>
+
+        {/* <View style={styles.buttonContainer}>
+          <TouchableOpacity style={styles.btn} onPress={() => navigation.navigate('LoginScreen')}>
+            <Text style={styles.btnText}>Back to Login</Text>
+          </TouchableOpacity>
+        </View> */}
       </View>
-
-
     </View>
   );
 };
@@ -126,4 +147,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default LoginScreen;
+export default RegisterScreen;
